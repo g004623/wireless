@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<data>
+  <loop>true</loop>
+  <repeat_times>1</repeat_times>
+  <repeat_period>2000</repeat_period>
+  <packets_list>
+    <packet name="packet_0">
+      <payload>73686F77206D6520746865206D6F6E65790A</payload>
+    </packet>
+  </packets_list>
+</data>
