@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link type="text/css" rel="stylesheet" href="/app.css" media="all">
+	<title>Wireless Temperature Sensor Network Monitoring System </title>
+<!-- start of goole gauge --> 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+
+<script>
+ var socket = io.connect('http://192.168.0.10:2868');  
+//	var socket = io.connect('http://192.168.0.10:7532');   // for eunwho P.E.
+//------------------------------------------------------------
+	var textArea =[];
+	var count1 = 0;
+	var count2 = 0;
+	var msgCount = 0;
+	google.charts.load('current', {'packages':['corechart']});
+	var pinData = [['Element','Density',{role:'style'}],
+					['LUBE1',100, 'blue'],
+					['LUBE2',100, 'darkgray'],
+					['LUBE3',100, 'darkgray'],
+					['LUBE4',100, 'darkgray']
+					];
+function drawPin( pinData,id){
+	var data = new google.visualization.arrayToDataTable(pinData);
+	var view = new google.visualization.DataView(data);
+	view.setColumns([0,1,
+		{calc:'stringify', sourceColumn:1,
+		 type: 'string', role:'annotation'},
+		 2]);
+	var options = {
+		width: 300,	bar  : {groupWidth:'30%'},
+		legend: { position: 'none' },
+		vAxis:{title:'Pin State',minValue: 0, maxValue: 100}
+	};	
+			
+	var chart = new google.visualization.ColumnChart(document.getElementById(id));
+	chart.draw(view, options);
+}
+<!-- start of google scatter -->
+var graphData1 = [];
+var graphData2 = [];
+var graphData3 = [];
+var graphData4 = [];
+var scatGraphTitle=['','','',''];
+var graphData = [];
+for( var i = 0 ; i < 7; i++){
+	graphData1.push([i]);
+	for( var j = 0 ; j < 6 ; j++)	graphData1[i].push(37*1);
+}
+graphData1[0][1] = 35;	
+graphData1[0][2] = 40;
+for( var i = 0 ; i < 7; i++){
+	graphData2.push([i]);
+	for( var j = 0 ; j < 6 ; j++)	graphData2[i].push(37*1);
+}
+graphData2[0][1] = 35;	
+graphData2[0][2] = 40;
+for( var i = 0 ; i < 7; i++){
+	graphData3.push([i]);
+	for( var j = 0 ; j < 6 ; j++)	graphData3[i].push(37*1);
+}
+graphData3[0][1] = 35;	
+graphData3[0][2] = 40;
+for( var i = 0 ; i <7; i++){
+	graphData4.push([i]);
+	for( var j = 0 ; j < 6 ; j++)	graphData4[i].push(37*1);
+}
+graphData4[0][1] = 35;	
+graphData4[0][2] = 40;
+google.charts.load('current', {'packages':['corechart', 'scatter']});
+google.charts.setOnLoadCallback(drawStuff);
+function drawStuff( ) {
+	var chartDiv = [];
+	var gData = [];
+	var mOption = [];
+   var data1 = new google.visualization.DataTable();
+	data1.addColumn('number', 'Date');
+     	for( var k = 1 ; k < 7 ; k++){ 
+		data1.addColumn('number');
+	}
+ 
+   var materialOptions1 = {
+    	chart: { title: scatGraphTitle[0]},
+          	width: 1240,
+          	height: 200,
+          	axes: {	y: {'Sensor Value': {label: ''}, }},
+				hAxis:{ title:'겨드랑이',titleTextStyle:{color: ''},	
+				format:'#일'
+			}
+	};
+	var chartDiv1 = document.getElementById('chart_div1');
+	function drawMaterialChart1( ) {
+		var materialChart = new google.charts.Scatter(chartDiv1);
+		data1.addRows( graphData1);
+      materialChart.draw(data1, google.charts.Scatter.convertOptions(materialOptions1));
+	}
+	drawMaterialChart1();
+   var data2 = new google.visualization.DataTable();
+	data2.addColumn('number', 'Date');
+     	for( var k = 1 ; k < 7 ; k++){ 
+		data2.addColumn('number');
+	}
+   var materialOptions2 = {
+    	chart: { title: scatGraphTitle[1]},
+          	width: 1240,
+          	height: 200,
+          	axes: {	y: {'Sensor Value': {label: ''}, }},
+				hAxis:{ title:'가슴',titleTextStyle:{color: ''},	
+				format:'#일'
+			}
+	};
+	var chartDiv2 = document.getElementById('chart_div2');
+	function drawMaterialChart2() {
+		var materialChart = new google.charts.Scatter(chartDiv2);
+		data2.addRows( graphData2);
+      materialChart.draw(data2, google.charts.Scatter.convertOptions(materialOptions2));
+	}
+	drawMaterialChart2();
+//--- graph3
+   var data3 = new google.visualization.DataTable();
+	data3.addColumn('number', 'Date');
+     	for( var k = 1 ; k < 7 ; k++){ 
+		data3.addColumn('number');
+	}
+   var materialOptions3 = {
+    	chart: { title: scatGraphTitle[2]},
+          	width: 1240,
+          	height: 200,
+          	axes: {	y: {'Sensor Value': {label: ''}, }},
+				hAxis:{ title:'손목',titleTextStyle:{color: ''},	
+				format:'#일'
+			}
+	};
+	var chartDiv3 = document.getElementById('chart_div3');
+	function drawMaterialChart3() {
+		var materialChart = new google.charts.Scatter(chartDiv3);
+		data3.addRows( graphData3);
+      materialChart.draw(data3, google.charts.Scatter.convertOptions(materialOptions3));
+	}
+	drawMaterialChart3();
+//--- graph4
+   var data4 = new google.visualization.DataTable();
+	data4.addColumn('number', 'Date');
+     	for( var k = 1 ; k < 7 ; k++){ 
+		data4.addColumn('number');
+	}
+   var materialOptions4 = {
+    	chart: { title: scatGraphTitle[3]},
+          	width: 1240,
+          	height: 200,
+          	axes: {	y: {'Sensor Value': {label: ''}, }},
+				hAxis:{ title:'',titleTextStyle:{color: ''},	
+				format:'#일'
+			}
+	};
+	var chartDiv4 = document.getElementById('chart_div4');
+	function drawMaterialChart4( ) {
+		var materialChart = new google.charts.Scatter(chartDiv4);
+		data4.addRows( graphData4);
+      materialChart.draw(data4, google.charts.Scatter.convertOptions(materialOptions4));
+	}
+	drawMaterialChart4();
+};
+function tableCreate( ){
+	var title = ['M','version','group','sensor#','MY', 'MP','SH','SL','DH','DL',
+				'%V','S.V','B.V','C.T', 'C.V', 
+   			'DB','D.Id','NI','No.S','Rx Time'];
+	var tableWidth = ['60','60','60','60','40','40','30','60','40','40','30','60','60','60','30','130'];
+	var x = document.createElement('TABLE');
+	x.setAttribute("id","tblData2");
+	var tbl = document.getElementById('table2').appendChild(x);
+	var tr = tbl.insertRow();
+	for( var i = 0; i < 16 ; i ++){
+		var td = tr.insertCell();
+		td.appendChild(document.createTextNode(title[i+4]));
+		td.style.border = '1px solid black';
+		td.setAttribute('width',tableWidth[i]);
+		td.setAttribute('align','center');			
+	}
+	for(var j = 0 ; j < 5 ; j++){
+		var tr = tbl.insertRow();	
+		for( var i = 0; i < 16 ; i ++){
+				var td = tr.insertCell();
+			td.appendChild(document.createTextNode(['000']));
+			td.style.border = '1px solid black';
+			td.setAttribute('align','center');			
+		}
+	}
+}
+function changeContent(id, targRow, cell, content) {
+	var rowIn = targRow;
+	console.log('row = ',targRow);
+	rowIn = ( rowIn > 4 ) ? 1 : rowIn -1 ;
+  	var a = document.getElementById(id).rows[rowIn].cells;
+  	a[cell].setAttribute('bgColor','white');
+    	
+  	var x = document.getElementById(id).rows[targRow].cells;
+  	x[cell].innerHTML = content;
+  	x[cell].setAttribute('bgColor','yellow');
+}
+		
+function writeTable(msg, row, no){
+	var val ='---';
+	var tmp = msg.split(',');
+	for(var i = 4 ; i < 19 ; i++){
+		if( tmp[0] === 'M')  val = tmp[i] ;
+		( no == 2 ) ? changeContent('tblData2',row,i-4,val) : changeContent('tblData3',row,i-4,val);
+	}
+	
+	var d = new Date();
+	var weekday = new Array(7);
+	weekday[0]= "Sun"; weekday[1]= "Mon"; weekday[2]= "Tue"; weekday[3]= "Wed";
+	weekday[4]= "Thu"; weekday[5]= "Fri"; weekday[6]= "Sat";
+	var n = weekday[d.getDay()];	var h = d.getHours(); 	var m = d.getMinutes();
+	val = n + ' : ' + h + ' : ' + m ;
+	( no == 2) ? changeContent('tblData2',row,15,val):changeContent('tblData3',row,15,val);
+}   
+for ( var i = 0 ; i < 20 ; i ++)	textArea.push(' \n');
+var signalToggle = true;
+socket.on('stalled',function( data ) {
+	var $target = $('div[data-x = ' + data.x + '][data-y = ' + data.y + ']');
+	$target.removeClass('init moving').addClass('stalled');
+	console.log("reserve return");
+});
+socket.on('moved',function( data ) {
+	var $target = $('div[data-x = ' + data.x + '][data-y = ' + data.y + ']');
+	$target.removeClass('init stalled').addClass('moved');
+});
+socket.on('lowbattery',function( data ) {
+	var $target = $('div[data-x = ' + data.x + '][data-y = ' + data.y + ']');
+	$target.removeClass('init stalled').addClass('lowbattery');
+});
+socket.on('sensorErr',function( data ) {
+	var $target = $('div[data-x = ' + data.x + '][data-y = ' + data.y + ']');
+	$target.removeClass('init stalled').addClass('sensorErr');
+});
+socket.on('normal',function( data ) {
+	var $target = $('div[data-x = ' + data.x + '][data-y = ' + data.y + ']');
+	$target.removeClass('init stalled').addClass('signalOn1');
+});
+	
+socket.on('rxdmsg',function(msg){
+	var k = msgCount;
+	textArea[msgCount] = msg;
+	msgCount = ( msgCount > 18 ? 0: msgCount+1);
+	var textA ='';
+	for( var j = 0 ; j < 19 ; j ++){
+		textA += textArea[k] ;
+		k = ( k > 1 ? k-1: 19);
+	}
+	var temp = textA.replace(/\r\n?/gm,'<br />');
+	document.getElementById('rxdMsg').innerHTML = temp;
+});
+socket.on('endDevice',function( data ) {
+	count1 = ( (count1 < 5 ) ? count1 + 1 : 1); 
+	writeTable(data.endDevice.rxData,count1,2);
+	var count = data.endDevice.numSens;
+	for(var i = 0 ; i < 4 ; i++){
+		if( i < count ){
+			var a = data.sens[i].status;
+			var sum = 0;
+			if( a[5] == 1 )			{ sum = 100;
+			} else if ( a[4] == 1) 	{ sum = 83;
+			} else if ( a[3] == 1) 	{ sum = 66;
+			} else if ( a[2] == 1) 	{ sum = 50;
+			} else if ( a[1] == 1) 	{ sum = 33;
+			} else if ( a[0] == 1) 	{ sum = 16;
+			} else	{ sum = 0;}
+			pinData[i+1][1] = sum;
+			pinData[i+1][2] = 'blue';
+		}else{
+			pinData[i+1][1] = 100;
+			pinData[i+1][2] = 'gray';
+		}
+	}
+	drawPin( pinData,"right_div1");
+});
+socket.on('sensData',function(msg){			
+	msgCount = 0;
+	var mastMsg = msg.mast.wsnData;
+	for( var j = 0 ; j < 19 ; j ++) textArea[j] = '';
+	count1 = ( (count1 < 5) ? count1 + 1 : 1); 
+	console.log(mastMsg);
+	writeTable(mastMsg,count1,2);
+	var textA ='';
+	textA += msg.mast.date + ' : ' + msg.mast.wsnData;
+	sensData = msg.sens;
+	for( var key in sensData ){
+		textA += sensData[key].date + '  ::  ' + sensData[key].wsnData;				
+	}		
+	var temp = textA.replace(/\r\n?/gm,'<br />');
+	document.getElementById('rxdMsg').innerHTML = temp;
+});
+socket.on('received',function( data ) {
+	var $target = $('div[data-x = ' + data.x + '][data-y = ' + data.y + ']');
+	console.log('received');
+	if( signalToggle == true){
+ 		signalToggle = false;
+		$target.removeClass('init stalled moved signalOn1').addClass('signalOn2');
+	} else{
+		signalToggle = true;
+		$target.removeClass('init stalled moved signalOn2').addClass('signalOn1');
+	}
+	console.log("received On");
+});
+socket.on('graphData',function( docs ) {
+	graphData1 = docs.table4;
+	graphData2 = docs.table3;
+	graphData3 = docs.table2;
+	graphData4 = docs.table1;
+	var name = docs.masterName;
+	for(var key in docs.sensorList){ 
+		var y = name[1]*1;
+		var x = name.substr(2,2)*1;
+		scatGraphTitle[key] = setScatGraphTitle(x,y)+ docs.sensorList[key];
+	}
+	drawStuff();
+});
+function setScatGraphTitle(x,y){
+	var a = '';
+	if			(y < 3 ) a = 'Boom Port Side Group '+ (y*1+1);
+	else if 	(y < 6 ) a = 'Boom Star Board Side Group ' + (y*1 +1);
+	else if 	( y == 6 ) a = 'Backstay Port Side ';
+	else if 	( y == 7 ) a = 'Backstay Start Board Side ';
+	else 					a = ' Error';
+	a = a+ ' #' + x;
+	return a;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+	// define variable
+			var onClickSeat = function () {
+				var x = $(this).attr('data-x');
+				var y = $(this).attr('data-y');
+				var z = document.getElementById('radio_1').checked;
+				var k = document.getElementById('graph_1').checked;
+				socket.emit('clickDevice',{	x: x, y: y,z: z, k : k });
+		};
+			$.getJSON('/wsnObj', { dummy: new Date().getTime() }, function(wsnObj){
+	
+				// console.log('wnsObj',wsnObj);
+				// Creat endDevice Sheet
+				$.each(wsnObj, function (groupId, endDeviceGroup ) {
+					// Create Document object
+					var $line = $('<div></div>').addClass('line');
+					$.each(endDeviceGroup, function( deviceId, sensCtrl ){
+						// Create Document Object and ADD to var $line
+						var $output = $('<div></div>',{	'class':'seat',	'data-x': deviceId,'data-y': groupId }).appendTo($line);
+						$output.on('click',onClickSeat);
+						
+						var status = sensCtrl.endDevice.status;
+						if( status == 0 ){			
+							$output.removeClass("moved stalled").addClass('init'); 
+						}else if( status == 1 ) {	
+							$output.removeClass("init stalled").addClass('init'); 
+							$output.addClass('moved'); 
+						}else if( status == 2 ) {
+							$output.removeClass("init moved").addClass('stalled'); 
+						} 
+						else {
+							$output.removeClass("moved stalled").addClass('init'); 
+						}	
+					});
+					// Add Document Object
+					$line.appendTo('section');
+				});
+			});
+			
+			tableCreate();
+		});
+</script>
+
+<script>
+function startTime() {
+	var today = new Date();
+	var h = today.getHours();
+	var m = today.getMinutes();
+	var s = today.getSeconds();
+	
+	m = checkTime(m);
+	s = checkTime(s);
+	document.getElementById('dispTime').innerHTML = Date();
+	h + ":" + m + ":" + s;
+	var t = setTimeout(startTime, 30000	);
+}
+		
+function checkTime(i) {
+	if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+	return i;
+}
+function drawGraph(){
+   socket.emit('reqGraph',{
+      x: 'L,4,3',
+      y: 'G718'
+   });
+}
+</script>
+
+<body onload= 'startTime()'>
+	<div align="center" class="wrapper">
+	<header>
+		<H2>Wireless Temperature Sensor Network Monitoring System </h2>
+	</header>
+   	<div id="subTitle">
+	    		<div id= "subtitle"> 
+					<a id="dispTime"></a>
+				</div>  
+
+			<div id="checkbox">
+				<input type ='radio' id='radio_1' name='dataTypeRadio' value='0' /> Get Graph Data  
+			<!--	<input type ='radio' id='radio_2' name='dataTypeRadio' value='1' checked='checked'/> Get Text State --> 
+				<input type ='radio' id='graph_1' name='graphTypeRadio' value='1' checked='checked' /> One Week State   
+				<input type ='radio' id='graph_2' name='graphTypeRadio' value='0' /> One Month State 
+	    	</div>
+		</div>
+	</div>
+
+	<div id="tablecontainer">
+
+<!--   	<aside> 
+   		<table id="tbthsensor">
+   			<tr><th>XXXXXXXXX</th><th> XXXXXXX </th></tr>	
+	    		<tr><th rowspan="3">A동</th>
+					<th>101호</th> </tr>
+	 				<tr> <th>102호</th> </tr>
+	 				<tr> <th>103호</th> </tr>
+			
+	    		<tr> <th rowspan="3">B동</th>
+					<th>101호</th> </tr>
+	 				<tr>	<th>102호</th>	</tr>
+	 				<tr>	<th>103호</th>	</tr>
+	    	</table>
+		</aside>
+-->
+		<div id="div1">
+			<div class= "sensornumber">
+				<div>301호</div><div>302호</div><div>303호</div><div>304호</div><div>305호</div><div>306호</div><div>307호</div><div>308호</div><div>309호</div><div>310호</div>
+			</div>
+		</div>	
+ 		<section>
+		</section>
+
+		<div id="namebox1">
+			<div id="name11">김민영,W,51</div>
+			<div id="name12">최민정,W,23</div>
+			<div id="name13">강지영,W,56</div>
+			<div id="name14">박지수,W,07</div>
+			<div id="name15">정은수,W,32</div>
+			<div id="name16">최은아,W,12</div>
+		</div>
+		<div id="namebox2">
+			<div id="name21">강성훈,M,51</div>
+			<div id="name22">김민수,M,19</div>
+			<div id="name23">최창현,M,49</div>
+			<div id="name24">양진현,M,67</div>
+		</div>
+		<div id="namebox3">
+			<div id="name31">허유정,W,38</div>
+			<div id="name32">조재영,W,29</div>
+			<div id="name33">최자영,W,76</div>
+			<div id="name34">장정민,W,57</div>
+			<div id="name35">이명숙,W,72</div>
+		</div>
+		<div id="namebox4">
+			<div id="name41">신기현,M,34</div>
+			<div id="name42">우지후,M,32</div>
+			<div id="name43">김지운,M,24</div>
+		</div>
+		<div id="namebox5">
+			<div id="name51">한민현,M,24</div>
+			<div id="name52">장윤수,M,51</div>
+			<div id="name53">한인수,M,54</div>
+			<div id="name54">성진현,M,76</div>
+			<div id="name55">강봉수,M,80</div>
+			<div id="name56">김현준,M,08</div>
+		</div>
+		<div id="namebox6">
+			<div id="name61">박남준,M,71</div>
+			<div id="name62">박일수,M,69</div>
+			<div id="name63">이성천,M,53</div>
+			<div id="name64">안진현,M,77</div>
+			<div id="name65">최현식,M,60</div>
+		</div>
+		<div id="namebox7">
+			<div id="name71">이윤정,W,72</div>
+			<div id="name72">김은지,W,19</div>
+			<div id="name73">김고현,W,24</div>
+			<div id="name74">김상지,W,46</div>
+			<div id="name75">김경은,W,30</div>
+		</div>
+		<div id="namebox8">
+			<div id="name81">박은실,W,58</div>
+			<div id="name82">은하진,W,54</div>
+			<div id="name83">김현주,W,35</div>
+			<div id="name84">정연수,W,49</div>
+		</div>
+		<div id="namebox9">
+			<div id="name91">김민지,W,21</div>
+			<div id="name92">장아현,W,43</div>
+		</div>
+		<div id="namebox10">
+			<div id="name101">최지나,W,22</div>
+			<div id="name102">윤소영,W,45</div>
+			<div id="name103">백아연,W,47</div>
+			<div id="name104">정필자,W,60</div>
+		</div>
+
+	</div>	
+</wrapper>
+
+	<div id="wrap1" style="width: 1280px; height: 690px;">
+			<table id="scatter">
+				<tr>
+					<th> <div id="chart_div1" style="" > </div> </th>
+				</tr>
+				<tr>
+					<th> <div id="chart_div2" style="" > </div> </th>
+				</tr>
+				<tr> 
+					<th> <div id="chart_div3" style="" > </div> </th>
+				</tr>
+				<tr> 
+	<!--				<th> <div id="chart_div4" style="" > </div> </th>
+				</tr>
+	-->
+			</table>
+
+	<!--			<table id='table2' width = '1000' ></table>
+				<div id="right_div1" style="width: 290px; height: 113px;">
+			</div>
+	-->	
+	</div>	
+<!--	<div id='rxdMsgBox' class = 'cssRxMsgBox'>	
+		<p id = 'rxdMsg' class = 'cssRxMsg'>wait data !	</p>
+	</div>
+-->
+
+<!--	<div id="chart_div5" style="width: 900px; height: 500px;"></div> -->
+
+</body>
+
+</html>
