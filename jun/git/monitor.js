@@ -2,9 +2,7 @@ var title = ['M','version','group','sensor#','MY', 'MP','SH','SL','DH','DL',
              '%V','S.V','B.V','C.T', 'C.V','DB','D.Id','NI','No.S'
     ];
                                                                             
-
 var EndDevice = [10,10,10,10,10,10];
-
 var TLB = [];
 var agn0 = [3,3,3,3,3, 3,3,3,3,3];
 var agn1 = [3,3,3,3,3, 3,3,3,3,3];
@@ -12,11 +10,7 @@ var agn2 = [3,3,3,3,3, 3,3,3,3,3];
 var agn3 = [3,3,3,3,3, 3,3,3,3,3];
 var agn4 = [3,3,3,3,3, 3,3,3,3,3];
 var agn5 = [3,3,3,3,3, 3,3,3,3,3];
-//var agn6 = [2,4,2,3,3, 3,3,4,4,4, 4,3,3,3,3, 2,2,4,3,3, 3,3,2,4,2, 3,4,4,3,4, 4,3,3,2,2, 4,3];
-//var agn7 = [2,4,2,3,3, 3,3,4,4,4, 4,3,3,3,3, 2,2,4,3,3, 3,3,2,4,2, 3,4,4,3,4, 4,3,3,2,2, 4,3];
-
 var TLB = [agn0,agn1,agn2,agn3,agn4,agn5];
-
 var fs = require('fs');
 var logFile = 'eunwhoData.json';
 var content = fs.readFileSync(logFile, 'utf8');
@@ -24,7 +18,6 @@ var WSNT = JSON.parse(content);
 
 var tmp = JSON.stringify(WSNT);
 //fs.writeFileSync('monitor.txt',O_APPEND,tmp, 'utf8');
-
 var gId = 0;
 var dId = 0;
 

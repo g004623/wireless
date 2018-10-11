@@ -55,7 +55,6 @@ for ( var i = 0 ; i < 6 ; i ++ ){
 		});
 	}
 }
-
 //var fs = require('fs');
 
 var now = new Date();
@@ -113,7 +112,6 @@ app.get('/app.css', function (req, res) {
 app.get('/wsnObj',function ( request, response, next) {
 	response.send(WSNT);
 }); 
-
 
 // L,2,43,300,620,649,691,722,669,655,281,3.29,CS44,21719,3
 function sensProc(msg,x,y){
@@ -243,9 +241,6 @@ function checkMsg(masterMsg){
 
 	var wsnData = masterMsg.split(",");
     if( wsnData[0] != 'L' ){    return false;}
-//    if ( wsnData[2]< '0' || wsnData[2] > '7'){ return false;}    // 조사할 것 
-//    if ( wsnData[14] < '1' || wsnData[14] > '4' ){return false;} // 연구가 필요함
-
     return true;
 }
 
@@ -378,9 +373,6 @@ io.on('connection',function(socket){
 		if(( tmp1[0] === 'M' )&&(tmp1[16][0]==='G')){
 			var x = Number(tmp1[16][1]);
 			var y = tmp1[16][2] * 10 + tmp1[16][3]*1 -1;
-			//console.log("sensornumber=" + tmp1[16] );
-			//console.log("battery volt=" + tmp1[12] );
-			//console.log("number of sensors =" + tmp1[18] );
 			if(tmp1[12]< 3.3) {
 				io.to('sensornet').emit('lowbattery',{x: y, y:x});
 			}
@@ -396,7 +388,6 @@ io.on('connection',function(socket){
 		}
 		socketProc(from,msg);
 	});
-
 
 	socket.on('CH1',function(from,msg){	// from boom
 		io.to('sensornet').emit('rxdmsg',msg);
@@ -415,9 +406,6 @@ io.on('connection',function(socket){
 		if(( tmp1[0] === 'M' )&&(tmp1[16][0]==='G')){
 			var x = Number(tmp1[16][1]);
 			var y = tmp1[16][2] * 10 + tmp1[16][3]*1 -1;
-			//console.log("sensornumber=" + tmp1[16] );
-			//console.log("battery volt=" + tmp1[12] );
-			//console.log("number of sensors =" + tmp1[18] );
 			if(tmp1[12]< 3.3) {
 				io.to('sensornet').emit('lowbattery',{x: y, y:x});
 			}
@@ -437,8 +425,6 @@ io.on('connection',function(socket){
 	socket.on('clickDevice',function(data){
 
 		//console.log('data.y : ' + data.y +'    data.x : '+ data.x);
-
-
 		var sensorList = [];
 		var masterName = getMasterId(data.y,data.x);
 		var graphObj = {
@@ -529,7 +515,6 @@ var getMastMsg = function ( param ){
    });
 }
 
-
 var getSensMsg = function( mastId ) {
 	return new Promise(function ( resolve,reject ){ 
 		wsnDB1.find(
@@ -544,7 +529,6 @@ var getSensMsg = function( mastId ) {
 		).limit(10).sort({'data':-1});
 	});
 }
-
 
 var asyncfunc1 = function( param) {
 	return new Promise(function ( resolve,reject ){ 
@@ -625,7 +609,6 @@ function setSensorDataTb(docs){
 		return test;
 	}
 }	
-
 //console.log(test);
 
 var asyncSetSensorTb = function ( param ){
